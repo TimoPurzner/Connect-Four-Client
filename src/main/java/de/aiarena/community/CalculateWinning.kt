@@ -4,12 +4,12 @@ import java.util.*
 
 class CalculateWinning(private val field: WarZone) {
 
-    fun runMatrix(): Int? {
+    fun runMatrix(forPlayer: Coins ): Int? {
         var result: Int? = null;
         for (col in field.map[0].indices) {
             val testZone = field.copy()
-            testZone.updateField(col, Coins.ME)
-            if (testZone.checkForWin()) {
+            testZone.updateField(col, forPlayer)
+            if (testZone.checkForWin(forPlayer)) {
                 result = col;
                 break
             }

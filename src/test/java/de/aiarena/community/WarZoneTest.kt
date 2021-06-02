@@ -48,7 +48,7 @@ class WarZoneTest {
         warZone.updateField(2, Coins.ME)
         warZone.printField()
 
-        assert(CalculateWinning(warZone).runMatrix() == 2)
+        assert(CalculateWinning(warZone).runMatrix(Coins.ME) == 2)
     }
 
     @Test

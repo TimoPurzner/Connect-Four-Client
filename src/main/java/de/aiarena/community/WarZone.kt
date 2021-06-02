@@ -31,8 +31,8 @@ class WarZone {
         }
     }
 
-    fun checkForWin(): Boolean {
-        return winInColFor(Coins.ME) || winInRowFor(Coins.ME)
+    fun checkForWin(forPlayer: Coins): Boolean {
+        return winInColFor(forPlayer) || winInRowFor(forPlayer)
     }
 
     fun checkForLoss(): Boolean {

@@ -1,7 +1,7 @@
 package de.aiarena.community
 
 fun main(args: Array<String>) {
-    SimpleConnectFourClient("ai-arena.de", 1805, "6eb9662f5cf3a220432df2f474a0ecbaa777889f7b038a0ea47649f023eef3bf")
+    SimpleConnectFourClient("ai-arena.de", 1805, "Py3djsJzaxgFpqWpXUmfVIShQrq1WeAp")
 
     while (true) {
         Thread.sleep(5000)
@@ -21,19 +21,20 @@ class SimpleConnectFourClient(host: String, port: Int, secret: String) {
         println("msg: " + msg.code)
         println("msg: " + msg.headers.toString())
         println("myTurn: $myTurn")
-
         if (msg.headers.containsKey("Winner")) {
-            if (!myTurn) {
+            if (client.getMySlot() != msg.headers["Winner"]!!.toInt()) {
                 warZone.updateField(msg.headers["Column"]?.toInt(), Coins.ENEMY)
                 println("Enemy put Coin in " + msg.headers["Column"])
-                warZone.printField()
-            }
-            if (myTurn) {
-                println("MEEEE WOOOOONNN!!! ¯\\_(ツ)_/¯")
+                if (msg.headers["Winner"]!!.toInt() == -1) {
+                    println("Its a draw!!!")
+                } else {
+                    println("YOU LOOSE FATALITY")
+                }
             } else {
-                println("YOU LOOSE FATALITY")
+                println("MEEEE WOOOOONNN!!! ¯\\_(ツ)_/¯")
             }
             warZone.printField()
+            return
         }
 
         if(!myTurn) return
@@ -43,7 +44,12 @@ class SimpleConnectFourClient(host: String, port: Int, secret: String) {
         println("Enemy put Coin in " + msg.headers["Column"])
         warZone.printField()
 
-        var column = CalculateWinning(warZone).runMatrix()
+        var column = CalculateWinning(warZone).runMatrix(Coins.ME)
+        val enemyColumn = CalculateWinning(warZone).runMatrix(Coins.ENEMY)
+
+        if (column == null && enemyColumn != null) {
+            column = enemyColumn
+        }
 
         // do random if no win is possible
         if (column == null) {
